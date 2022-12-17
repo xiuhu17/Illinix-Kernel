@@ -1,0 +1,223 @@
+----------------------------------------------------------------------------------------------------
+Checkpoint1:
+
+PIC:
+1.  Problem:    Slave Interrupt handler cannot be invoked.
+    Reason:     The IRQ2 never get enabled.  
+    Time used:  1h
+    Solution:   Enable IRQ2 in i8259_init() to connect the master PIC and the slave PIC.
+
+Keyboard:
+2.  Problem:    Two characters are printed when one key pressed.
+    Reason:     One key pressed two interrupts generated with two different scancodes.
+    Time used:  2h
+    Solution:   Check if the scancode received from PIC is within the number of scannodes(127)
+                Discard the interrupt when the number is equal to or greater.
+                
+3.  Problem:    Only the first key pressed works, the remaining ones do not.
+    Reason:     The interrupt handler never returns to the previous instruction address(EIP).
+    Time used:  4h
+    Solution:   Used a wrapper function written in assembly languages, to save all registers,
+                to call the actual handler function written in C by the keyboard driver, and
+                to use the iret instruction resumes to the previous state that were saved by
+                the CPU before invoking the interruption.
+Paging:
+4.  Problem:    The machine crashed in page_init()
+    Reason:     Used video memory as a array index directly
+    Time used:  1h
+    Solution:   Only use the most significant 8 bits of VIDEO as the memory index
+
+5.  Problem:    page_init() will get the machine stuck
+    Reason:     The video memory is not shifted when it is filled into the base address
+    Time used:  1h
+    Solution:   change "VIDEO" to "(VIDEO >> PTE_OFFSET)"
+    
+IDT:
+6.  Problem:    First time loading handler into the IDT table, we could not find the handler.
+    Reason:     1) I forgot that handler function could not take parameter
+                2) I forgot to take the address of the handler.
+                3) Also take time to form and wrap the function, and differentiate them into trap/interrupt/syscall
+    Time usedL  2h
+    Solution    1) Write indicivual function inorder to eliminate the parameter.
+                2) Take address of the handler
+
+
+RTC:
+7.  Problem:    After call test_interrupts, the video memory space is static! Instead of 
+                changing characters.
+    Reason:     frequency not set correctly and therefore the characters cannot move.
+    Time used:  a day
+    Solution:   Adjust local function of set_RTC_freq to reject invalid frequencies
+----------------------------------------------------------------------------------------------------
+Checkpoint2:
+
+Terminal:
+1.  Problem:    Terminal_read never break out of loop.
+    Reason:     It only checks if the buffer has \n, not \r.
+    Time used:  1h
+    Solution:   Add \r to the if statement.
+
+
+File System:
+2.  Problem:    Page fault when initializing the file system driver.
+    Reason:     Access a vitural address that should not be accessed.
+    Time used:  30 min 
+    Solution:   (1) When incrmenting the address of the starting location of 
+                    the file system, I should check the type of the current 
+                    pointer. If the type is inode_t *, I should only add 1 to
+                    it so it will be added to the next 4kb address.
+                (2) Initializing the file system driver before paging. 
+                    (paging will refuse me to access the memory)
+
+3.  Problem:    Directory Always show the same filename.
+    Reason:     Did not update file position after reading.
+    Time used:  30 min
+    Solution:   Update f_pos after reading.
+
+4.  Problem:    Read 0 bytes everytime calling file_read
+    Reason:     inode is not the same as dirs index.
+    Time used:  1 hour 
+    Solution:   Remove the code that check if the current type is not regular file.
+                Because in my implmentation, only reading regular files can enter this
+                function.
+
+5.  Problem:    Divide by zero exception occurs when reading regular files.
+    Reason:     Divide by zero when calcuate The index of the data we want to read.
+    Time used:  10 min
+    Solution:   Divide by BLOCK_SIZE instead of the index of block because the index 
+                could be zero.
+
+6.  Problem:    system boot failed.
+    Reason:     did not open the terminal before using it.
+    Time used:  1 hour
+    Solution:   Since we don't have the standard syscall now, I must init terminal by myself.
+----------------------------------------------------------------------------------------------------
+Checkpoint3:
+
+System calls Linkage
+1.  Problem:    Page fault calling fputs 
+    Reason:     (1) Access sys_open instead of sys_write
+                (2) Forget to init file descriptor array for each process
+    Time used:  1 hour
+    Solution:   change the jump table offset or add a reset sys_reset at the beginning of the jump table.
+                init processes' file descriptor array
+
+2.  Problem:    syscall handler cannot return back to user mode (ring 3)
+    Reason:     does not iret properly 
+    Time used:  10 min 
+    Solution:   pop and iret
+
+3.  Problem:    Cannot read from sys_read
+    Reason:     use unimplment function copy from user 
+    Time used:  20 min
+    Solution:   Discard the call to copy from user since we have direct mapping this time 
+
+Process 
+4.  Problem:    Shell stopped after typing a error command
+    Reason:     Forget to kill the error process and resume shell process 
+    Time used:  1 hour
+    Solution:   when a error occur, context switch to shell
+
+
+5.  Problem:    Process switch failed
+    Reason:     Fail to switch back to parent when halt
+    Time used:  2 days
+    Solution:   Store parent esp and ebp before context switch and restore after child halts.
+
+6.  Problem:    invalid command page fault
+    Reason:     Did not remap the user space to the parent
+    Time used:  1 day
+    Solution:   Remap and reset tss esp0 and ss0
+
+Terminal 
+7.  Problem:    Backspace will remove the printed characters
+    Reason:     Did not check if the buffer size is empty 
+    Time used:  1 hour
+    Solution:   Only perform backspace when terminal buffer is empty
+
+8.  Problem:    CTRL-L will clear all of the screen
+    Reason:     Did not redraw 391OS >
+    Time used:  5 min
+    Solution:   Redraw after clear when press CTRL-L
+----------------------------------------------------------------------------------------------------
+Checkpoint4:
+
+Process
+1.  Problem:    Mutiple Shell cannot exit
+    Reason:     My computer interprets new line character as \r
+    Time used:  30 min
+    Solution:   change \r to \n when terminal_read to adjust shell program
+
+2.  Problem:    Init shell problem exit page fault
+    Reason:     Did not restart the init shell properly
+    Time used:  10 min
+    Solution:   Free the init shell process and restart the init process
+
+3.  Problem:    command line arguments parsing error 
+    Reason:     more than one leading spaces should be ignored
+    Time used:  30 min 
+    Solution:   Use a while loop to skip leading zeros
+    
+4.  Problem:    store command arguments error
+    Reason:     local char pointers will be lost after the function returns and stack frame cleared.
+    Time used:  20 min 
+    Solution:   Store the command arguments locally in array and later store it in the PCB
+
+5.  Problem:    syserr test failed 
+    Reason:     terminal and rtc: read/write/close wrong
+    Time used:  2 hour
+    Solution:   (1) terminal should never be able to close
+                (2) terminal should only allow fd 0 to read
+                (3) terminal should only allow fd 1 to write 
+                (4) rtc should open a file to set its f_op
+
+----------------------------------------------------------------------------------------------------
+Checkpoint5:
+
+Scheduler
+1.  Problem:    Page Fault when executing new process
+    Reason:     Linked List linking error
+    Time used:  1 h
+    Solution:   avoid add node into run queue more than once and clear it only once
+
+2.  Problem:    return abnormally from execute
+    Reason:     must cli when performing list add/remove
+    Time used:  2 h
+    Solution:   add cli/sti to protect scheduling and sleep/wakeup
+
+3.  Problem:    interactive process (shell) delayed response
+    Reason:     (1). chosen times lice too small
+                (2). init process occupy CPU
+                (3). unused shells should go to sleep
+    Time used:  2 h
+    Solution:   (1). choose a more reasonable time slice number to avoid too much 
+                context switches.
+                (2). at this point, init does nothing but spinning and yield the 
+                CPU, delete it for now greatly increase the response time
+                (3). after a shell executing a new process, it should go to sleep,
+                blocked by removing from the running queue. it wakes up as soon as
+                its child returns or the another terminal switch to its one.
+
+
+Terminal Switching
+1.  Problem:    
+    Reason:     
+    Time used:  30 min
+    Solution:   
+
+1.  Problem:    
+    Reason:     
+    Time used:  30 min
+    Solution:   
+
+
+Video memory
+1.  Problem:    Fish exited when terminal switching
+    Reason:     
+    Time used:  1 h
+    Solution:   
+
+
+
+
+
