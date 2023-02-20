@@ -1,9 +1,9 @@
 Features(student-distrib)
 
-# Process Managememnt
-   ## a. Round-Robin Scheduling
-   ## b. Re-desigend Completely Linux Fair Scheduler 
-   ## c. RB tree improve efficiency
+## Process Managememnt
+   a. Round-Robin Scheduling
+   b. Re-desigend Completely Linux Fair Scheduler 
+   c. RB tree improve efficiency
    
 # Memory Management
   ## a. User physical memory malloc
