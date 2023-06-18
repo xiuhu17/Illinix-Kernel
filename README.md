@@ -9,7 +9,8 @@
   - b. User memmory map
   - c. Dynamically allocating heap(sbrk, mmap)
   - d. Page fault handler
-  - e. Kmalloc
+  - e. Vmalloc
+  - f. Kmalloc
     - i. Buddy system
     - ii. Memory cache & Slab allocator
     - iii. Manage data structure in kernel
@@ -34,9 +35,10 @@
    - a. Keyboard interrupt
    - b. Timer interrupt
    - c. Real Time Clock interrupt
+   - d. Page Fault
 
 ### 7. Interface
-   - a. Implement shell
+   - a. Implement shell using fork-exec-wait(asyn)
 
 ### 8. Other
    - a. Global Descriptor Table
@@ -44,4 +46,5 @@
    - c. Task State Segment 
    - d. Paging
    - e. Programmable Interrupt Controller 
-   
+
+![plot](./res.jpg)
