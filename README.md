@@ -1,5 +1,5 @@
 ## Features(student-distrib)
-![plot](./res.jpg)
+
 ### 1. Process Managememnt
    - a. Round-Robin Scheduling
    - b. Re-desigend Completely Linux Fair Scheduler 
@@ -45,4 +45,7 @@
    - b. Interrupt Descriptor Table
    - c. Task State Segment 
    - d. Paging
-   - e. Programmable Interrupt Controller 
+   - e. Programmable Interrupt Controller
+
+### 9. Prize
+   - ![plot](./res.jpg)
