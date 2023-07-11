@@ -5,9 +5,9 @@
    - b. Re-desigend Completely Linux Fair Scheduler 
    - c. Red Black Self Balanced Tree improve efficiency
 ### 2. Memory Management
-  - a. User physical memory malloc
-  - b. User memmory map
-  - c. Dynamically allocating heap(sbrk, mmap)
+  - a. Usr- memory malloc
+  - b. Usr- memmory map
+  - c. Dynamically allocating heap- sbrk
   - d. Page fault handler
   - e. Vmalloc
   - f. Kmalloc
