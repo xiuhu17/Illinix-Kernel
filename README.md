@@ -23,6 +23,7 @@
    - a. Keyboard driver
    - b. Real Time Clock driver
    - c. Terminal driver
+   - d. VGA
 
 ### 5. System Calls
    - a. fork
