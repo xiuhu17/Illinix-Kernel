@@ -39,7 +39,7 @@
    - d. Page Fault
 
 ### 7. Interface
-   - a. Implement shell using fork-exec-wait(asyn)
+   - a. Implement shell
 
 ### 8. Other
    - a. Global Descriptor Table
