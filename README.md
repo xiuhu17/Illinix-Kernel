@@ -1,52 +1,34 @@
 ## Features(student-distrib)
 
 ### 1. Process Managememnt
-   - a. Round-Robin Scheduling
-   - b. Re-desigend Completely Linux Fair Scheduler 
-   - c. Red Black Self Balanced Tree improve efficiency
+   - a. Re-desigend Completely Linux Fair Scheduler 
+   - b. Red Black Self Balanced Tree improve efficiency
 ### 2. Memory Management
-  - a. Usr- memory malloc
-  - b. Usr- memmory map
-  - c. Dynamically allocating heap- sbrk
-  - d. Page fault handler
-  - e. Vmalloc
-  - f. Kmalloc
+  - a. mmap, sbrk
+  - b. vmalloc, kmalloc
+  - c. Page fault handler
     - i. Buddy system
     - ii. Memory cache & Slab allocator
-    - iii. Manage data structure in kernel
     
 ### 3. File System
    - a. Support file system
    - b. Support virtual file system
 
 ### 4. Driver
-   - a. Keyboard driver
+   - a. Keyboard driver, Terminal driver, VGA
    - b. Real Time Clock driver
-   - c. Terminal driver
-   - d. VGA
 
 ### 5. System Calls
-   - a. fork
-   - b. exec
-   - c. wait
-   - d. exit
-   - e. other systemcalls
+   - a. fork, exec, wait, exit
+   - b. other systemcalls
    
 ### 6. Interrupts
    - a. Keyboard interrupt
    - b. Timer interrupt
-   - c. Real Time Clock interrupt
-   - d. Page Fault
 
-### 7. Interface
-   - a. Implement shell
+### 7. Other
+   - a. Global Descriptor Table, Interrupt Descriptor Table, Task State Segment 
+   - b. Programmable Interrupt Controller
 
-### 8. Other
-   - a. Global Descriptor Table
-   - b. Interrupt Descriptor Table
-   - c. Task State Segment 
-   - d. Paging
-   - e. Programmable Interrupt Controller
-
-### 9. Prize
+### 8. Prize
    - ![plot](./res.jpg)
