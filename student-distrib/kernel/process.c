@@ -606,6 +606,16 @@ static inline void switch_to_user(thread_t *curr) {
     
     update_tss(curr);
 
+    /* copy CPU pre-pushed user context
+     * stack[....] : general purpose registers 
+     * stack[2042] : user eip register
+     * stack[2043] : user code segment 
+     * stack[2044] : user eflags 
+     * stack[2045] : user esp
+     * stack[2046] : user data segment
+     * stack[....] : hardware reserved
+     */
+    
     asm volatile ("                         \n\
                     andl  $0xFF,  %%eax     \n\
                     movw  %%ax,   %%ds      \n\
